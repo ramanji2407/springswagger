@@ -1,6 +1,5 @@
 package com.spring.pms.Exceptions;
 
-import java.nio.file.AccessDeniedException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +13,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.security.access.AccessDeniedException;
+
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -25,6 +26,8 @@ public class GlobalExceptionalHandler {
 	@ExceptionHandler(Exception.class)
     public ProblemDetail handleSecurityException(Exception ex) {
         ProblemDetail errorDetail = null;
+        System.out.println(9);
+
         if (ex instanceof BadCredentialsException) {
             System.out.println(9);
 
@@ -61,7 +64,8 @@ public class GlobalExceptionalHandler {
     }
 	@ExceptionHandler(DetailsNotFoundException.class)
 	 public ResponseEntity<?> handleStudentNotFoundRxception(DetailsNotFoundException detailsNotFoundException)
-	 {
+	 {            System.out.println(9);
+
 		DetailNotfound notfound=new DetailNotfound();
 		notfound.setMessage(detailsNotFoundException.getMessage());
 		notfound.setTimestamp(new Date());
@@ -70,7 +74,8 @@ public class GlobalExceptionalHandler {
 	 }
 	@ExceptionHandler(UserAlreadyExistException.class)
 	 public ResponseEntity<?> handleUserAlreadyExist(UserAlreadyExistException alreadyExist)
-	 {
+	 {            System.out.println(9);
+
 		UserAlreadexist notfound=new UserAlreadexist();
 		notfound.setMessage(alreadyExist.getMessage());
 		notfound.setTimestamp(new Date());
@@ -79,7 +84,8 @@ public class GlobalExceptionalHandler {
 	 }
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String, String>>handleMethodArgumentNotValidException(MethodArgumentNotValidException ex)
-	{
+	{            System.out.println(9);
+
 	Map<String, String>response=new HashMap<String, String>();	
 	ex.getBindingResult().getAllErrors().forEach(
 			(error)->{
@@ -91,7 +97,8 @@ public class GlobalExceptionalHandler {
 	}
 	@ExceptionHandler(BadRequestException.class)
 	 public ResponseEntity<?> handleBadrequeste(BadRequestException alreadyExist)
-	 {
+	 {            System.out.println(9);
+
 		BadRequest notfound=new BadRequest();
 		notfound.setMessage(alreadyExist.getMessage());
 		notfound.setTimestamp(new Date());

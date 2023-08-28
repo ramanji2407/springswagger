@@ -1,6 +1,7 @@
 package com.spring.pms.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.spring.pms.Entity.Project;
 import com.spring.pms.Entity.User;
+import com.spring.pms.Exceptions.BadRequestException;
 import com.spring.pms.Repository.ProjectRepo;
 import com.spring.pms.Repository.UserRepo;
 
@@ -40,7 +42,12 @@ public class UserService {
 	public void postUser( User user )
 	{
 //		Project project=projectRepo.findById(id);
-user.setPassword(encoder.encode(user.getPassword()));
+	Optional<User> user1=	userRepo.findByName(user.getName());
+	if(user1.isPresent())
+	{
+		throw new BadRequestException("alerady_user_name_exist");
+	}
+		user.setPassword(encoder.encode(user.getPassword()));
 //		project.getUser().add(user);
 //		projectRepo.save(project);
 		userRepo.save(user);

@@ -40,12 +40,17 @@ public class ProjectController {
 	
 	@Autowired 
 	private ProjectService projectService;
-	
 	@ApiResponses({
 	    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Projectapiresponse.class), mediaType = "application/json") },description = "Ok"),
 	    @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class),mediaType = "application/json")},description = "Internal Server Error" )
 	   ,@ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
-	   @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
+	   @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Notfound" ),
+	   @ApiResponse(responseCode = "403", content = { @Content(examples = {
+	           @ExampleObject(name = "Authorization_Error",value = "{\"message\":\"Your_Not_Authorized\"}"),
+	           @ExampleObject(name = "JWT_Signature_Error",value = "{\"message\":\"JWT_Signature_not_valid\"}"),
+	           @ExampleObject(name = "JWT_Token_expired !",value = "{\"message\":\"JWT_Token_already_expired_!\"}"),
+	           
+	         },schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
 	   @ApiResponse(responseCode = "204", content = { @Content(schema = @Schema(),mediaType = "application/json")},description = "No Content" )
 	}) 
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
@@ -66,8 +71,12 @@ public class ProjectController {
             @Content(schema = @Schema(implementation = Projectapiresponse.class), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class),mediaType = "application/json")},description = "Internal Server Error" ),
        @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
-       @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
-       @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Notfound" ),
+       @ApiResponse(responseCode = "403", content = { @Content(examples = {
+               @ExampleObject(name = "Authorization_Error",value = "{\"message\":\"Your_Not_Authorized\"}"),
+               @ExampleObject(name = "JWT_Signature_Error",value = "{\"message\":\"JWT_Signature_not_valid\"}"),
+               @ExampleObject(name = "JWT_Token_expired !",value = "{\"message\":\"JWT_Token_already_expired_!\"}"),
+               
+             },schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),       @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Notfound" ),
        @ApiResponse(responseCode = "204", content = { @Content(schema = @Schema())},description = "No Content" )
 })
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
@@ -96,12 +105,17 @@ public class ProjectController {
 	               @ExampleObject(name = "StartDateempty",value = "{\"message\":\"Pattern_shoulde_not_be_empty\"}"),
 	               @ExampleObject(name = "ProjectStatusinputerror", value = "{\"message\":\"Should_be_only_Active_or_Inactive\"}"),
 	             },schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
-	      
+	              @ApiResponse(responseCode = "403", content = { @Content(examples = {
+	               @ExampleObject(name = "Authorization_Error",value = "{\"message\":\"Your_Not_Authorized\"}"),
+	               @ExampleObject(name = "JWT_Signature_Error",value = "{\"message\":\"JWT_Signature_not_valid\"}"),
+	               @ExampleObject(name = "JWT_Token_expired !",value = "{\"message\":\"JWT_Token_already_expired_!\"}"),
+	               
+	             },schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
 
 
 	})
-		@PreAuthorize("hasRole('ROLE_MANAGER')")
-
+	 
+	@PreAuthorize("hasRole('ROLE_MANAGER')")
 	@PostMapping("/")
 	public ResponseEntity<ApiRespons<String>>postProject( @Valid @RequestBody Project project,@PathVariable int id)
 	{
@@ -128,8 +142,12 @@ public class ProjectController {
              },schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
        @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Notfound" ),
  @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
-       @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" )
-       
+ @ApiResponse(responseCode = "403", content = { @Content(examples = {
+         @ExampleObject(name = "Authorization_Error",value = "{\"message\":\"Your_Not_Authorized\"}"),
+         @ExampleObject(name = "JWT_Signature_Error",value = "{\"message\":\"JWT_Signature_not_valid\"}"),
+         @ExampleObject(name = "JWT_Token_expired !",value = "{\"message\":\"JWT_Token_already_expired_!\"}"),
+         
+       },schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),       
 
 
 })
@@ -148,7 +166,27 @@ public class ProjectController {
 		 return new ResponseEntity<>(response,HttpStatus.OK) ;
 	}
 	
-	
+	 @ApiResponses({
+	        @ApiResponse( responseCode = "201", content = {
+	            @Content(schema = @Schema(implementation = Response201.class), mediaType = "application/json") },description = "Created"),
+	        @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class,example = "{ \"status\": 500, \"message\": \"Database error\" }"),mediaType = "application/json")},description = "Internal Server Error" )
+	       , @ApiResponse(responseCode = "400", content = { @Content(examples = {
+	               @ExampleObject(name = "User_empty",value = "{\"message\":\"List_user_should_not_be_empty\"}"),
+	               
+	             },schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
+	              @ApiResponse(responseCode = "403", content = { @Content(examples = {
+	               @ExampleObject(name = "Authorization_Error",value = "{\"message\":\"Your_Not_Authorized\"}"),
+	               @ExampleObject(name = "JWT_Signature_Error",value = "{\"message\":\"JWT_Signature_not_valid\"}"),
+	               @ExampleObject(name = "JWT_Token_expired !",value = "{\"message\":\"JWT_Token_already_expired_!\"}"),
+	               
+	             },schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
+	              @ApiResponse(responseCode = "404", content = { @Content(examples = {
+	   	               @ExampleObject(name = "User_not_found",value = "{\"message\":\"User_not_found\"}"),
+	   	               @ExampleObject(name = "Project_not_found",value = "{\"message\":\"Project_not_found\"}"),
+
+	   	             },schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Bad Request" ),
+
+	})
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
 	@PostMapping("/{id}")
 	ResponseEntity<ApiRespons<String>>assigningUserToProject( @Valid @RequestBody Projectdto projectdto, @PathVariable int id)

@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-
+//import org.springframework.security.access.AccessDeniedException;
 import com.spring.pms.Filter.Authfilter;
 import com.spring.pms.Service.Userinfouserdetailservice;
 
@@ -33,6 +33,7 @@ public class Securityconfiguration {
 	    @Autowired
 	    @Qualifier("handlerExceptionResolver")
 	    private HandlerExceptionResolver exceptionResolver;
+	    
 	  @Bean
 	    public Authfilter authfilter(){
 	        return new Authfilter(exceptionResolver);

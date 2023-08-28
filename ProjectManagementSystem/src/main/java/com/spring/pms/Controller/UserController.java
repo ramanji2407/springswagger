@@ -59,8 +59,14 @@ private	UserService userService;
 	@ApiResponses({
         @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Userapiresponse.class), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class),mediaType = "application/json")},description = "Internal Server Error" )
-       ,@ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
-       @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
+        , @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Notfound" ),
+        @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
+       @ApiResponse(responseCode = "403", content = { @Content(examples = {
+               @ExampleObject(name = "Authorization_Error",value = "{\"message\":\"Your_Not_Authorized\"}"),
+               @ExampleObject(name = "JWT_Signature_Error",value = "{\"message\":\"JWT_Signature_not_valid\"}"),
+               @ExampleObject(name = "JWT_Token_expired !",value = "{\"message\":\"JWT_Token_already_expired_!\"}"),
+               
+             },schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),       
        @ApiResponse(responseCode = "204", content = { @Content(schema = @Schema(),mediaType = "application/json")},description = "No Content" )
 
 
@@ -85,8 +91,12 @@ private	UserService userService;
             @Content(schema = @Schema(implementation = Userapiresponse.class), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class),mediaType = "application/json")},description = "Internal Server Error" ),
        @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
-       @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
-       @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Notfound" ),
+       @ApiResponse(responseCode = "403", content = { @Content(examples = {
+               @ExampleObject(name = "Authorization_Error",value = "{\"message\":\"Your_Not_Authorized\"}"),
+               @ExampleObject(name = "JWT_Signature_Error",value = "{\"message\":\"JWT_Signature_not_valid\"}"),
+               @ExampleObject(name = "JWT_Token_expired !",value = "{\"message\":\"JWT_Token_already_expired_!\"}"),
+               
+             },schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),              @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Notfound" ),
        @ApiResponse(responseCode = "204", content = { @Content(schema = @Schema())},description = "No Content" )
 })
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
@@ -109,19 +119,20 @@ private	UserService userService;
             @Content(schema = @Schema(implementation = Response201.class), mediaType = "application/json") },description = "Created"),
         @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class,example = "{ \"status\": 500, \"message\": \"Database error\" }"),mediaType = "application/json")},description = "Internal Server Error" )
        , @ApiResponse(responseCode = "400", content = { @Content(examples = {
-               @ExampleObject(name = "Idempty",value = "{\"message\":\"Project_id_should_not_be_empty\"}"),
-               @ExampleObject(name = "Idtype",value = "{\"message\":\"Project_id_should_be_integer_type\"}"),
+               @ExampleObject(name = "Idempty",value = "{\"message\":\"User_id_should_not_be_empty\"}"),
+               @ExampleObject(name = "Idtype",value = "{\"message\":\"User_id_should_be_integer_type\"}"),
                @ExampleObject(name = "Nameempty",value = "{\"message\":\"Name_should_not_be_empty\"}"),
                @ExampleObject(name = "Paswordempty",value = "{\"message\":\"Pasword_shoulde_not_be_empty\"}"),
                @ExampleObject(name = "EmailPattern",value = "{\"message\":\"Pattern_shoulde_be_An_email_address_consists_of_a_username,_an_@_sign,_and_a_domain_name\"}"),
                @ExampleObject(name = "Roletype",value = "{\"message\":\"Role_shoulde_be_either_user_admin\"}"),
                @ExampleObject(name = "Departmenttype",value = "{\"message\":\"Department_should_be_either_backend_frontend\"}"),
+               @ExampleObject(name = "Nameconflict",value = "{\"message\":\"Name_should_be_unique\"}"),
+
              },schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
 
        @ApiResponse(responseCode = "409", content = { @Content(schema = @Schema(implementation = Response409.class),mediaType = "application/json")},description = "Conflicts" ),
        @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
-       @ApiResponse(responseCode = "403", content = { @Content( schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" )
-
+       
 
 })
 
@@ -151,8 +162,12 @@ private	UserService userService;
              },schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
         @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Notfound" ),
        @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
-       @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" )
-       
+       @ApiResponse(responseCode = "403", content = { @Content(examples = {
+               @ExampleObject(name = "Authorization_Error",value = "{\"message\":\"Your_Not_Authorized\"}"),
+               @ExampleObject(name = "JWT_Signature_Error",value = "{\"message\":\"JWT_Signature_not_valid\"}"),
+               @ExampleObject(name = "JWT_Token_expired !",value = "{\"message\":\"JWT_Token_already_expired_!\"}"),
+               
+             },schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),              
 
 
 })
@@ -176,8 +191,7 @@ private	UserService userService;
         @ApiResponse(responseCode = "200", content = {
             @Content(schema = @Schema(implementation = ResponseMessage.class), mediaType = "application/json") },description = "Created"),
         @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
-       @ApiResponse(responseCode = "403", content = { @Content( schema = @Schema(implementation = ResponseMessage.class),mediaType = "application/json")},description = "Forbidden" )
-
+       
 
 })
 

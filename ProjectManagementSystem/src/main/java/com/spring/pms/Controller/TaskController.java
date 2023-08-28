@@ -45,7 +45,14 @@ public class TaskController {
         @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Taskapiresponse.class), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class),mediaType = "application/json")},description = "Internal Server Error" )
        ,@ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
-       @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
+       @ApiResponse(responseCode = "403", content = { @Content(examples = {
+               @ExampleObject(name = "Authorization_Error",value = "{\"message\":\"Your_Not_Authorized\"}"),
+               @ExampleObject(name = "JWT_Signature_Error",value = "{\"message\":\"JWT_Signature_not_valid\"}"),
+               @ExampleObject(name = "JWT_Token_expired !",value = "{\"message\":\"JWT_Token_already_expired_!\"}"),
+               
+             },schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),     
+       @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Notfound" ),
+ 
        @ApiResponse(responseCode = "204", content = { @Content(schema = @Schema(),mediaType = "application/json")},description = "No Content" )
 })  
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
@@ -66,7 +73,14 @@ public class TaskController {
             @Content(schema = @Schema(implementation = Taskapiresponse.class), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class),mediaType = "application/json")},description = "Internal Server Error" ),
        @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
-       @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
+       @ApiResponse(responseCode = "403", content = { @Content(examples = {
+               @ExampleObject(name = "Authorization_Error",value = "{\"message\":\"Your_Not_Authorized\"}"),
+               @ExampleObject(name = "JWT_Signature_Error",value = "{\"message\":\"JWT_Signature_not_valid\"}"),
+               @ExampleObject(name = "JWT_Token_expired !",value = "{\"message\":\"JWT_Token_already_expired_!\"}"),
+               
+             },schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),           
+       
+       
        @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Notfound" ),
        @ApiResponse(responseCode = "204", content = { @Content(schema = @Schema())},description = "No Content" )
 })
@@ -108,8 +122,12 @@ public class TaskController {
 	              
 	             },schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Not_Found" ),
 	       @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
-	       @ApiResponse(responseCode = "403", content = { @Content( schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" )
-
+	       @ApiResponse(responseCode = "403", content = { @Content(examples = {
+	               @ExampleObject(name = "Authorization_Error",value = "{\"message\":\"Your_Not_Authorized\"}"),
+	               @ExampleObject(name = "JWT_Signature_Error",value = "{\"message\":\"JWT_Signature_not_valid\"}"),
+	               @ExampleObject(name = "JWT_Token_expired !",value = "{\"message\":\"JWT_Token_already_expired_!\"}"),
+	               
+	             },schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),     
 
 	})
 
@@ -144,8 +162,12 @@ public class TaskController {
                @ExampleObject(name = "TaskidNotfound",value = "{\"message\":\"Task_id_Not_found\"}"),
               
              },schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Not_Found" ), @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
-       @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" )
-       
+       @ApiResponse(responseCode = "403", content = { @Content(examples = {
+               @ExampleObject(name = "Authorization_Error",value = "{\"message\":\"Your_Not_Authorized\"}"),
+               @ExampleObject(name = "JWT_Signature_Error",value = "{\"message\":\"JWT_Signature_not_valid\"}"),
+               @ExampleObject(name = "JWT_Token_expired !",value = "{\"message\":\"JWT_Token_already_expired_!\"}"),
+               
+             },schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),            
 
 
 })
@@ -168,7 +190,14 @@ public class TaskController {
 	            @Content(schema = @Schema(implementation = Response200.class), mediaType = "application/json") },description = "Ok"),
 	        @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class,example = "{ \"status\": 500, \"message\": \"Database error\" }"),mediaType = "application/json")},description = "Internal Server Error" ),
 	       @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
-	       @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
+	       @ApiResponse(responseCode = "403", content = { @Content(examples = {
+	               @ExampleObject(name = "Authorization_Error",value = "{\"message\":\"Your_Not_Authorized\"}"),
+	               @ExampleObject(name = "JWT_Signature_Error",value = "{\"message\":\"JWT_Signature_not_valid\"}"),
+	               @ExampleObject(name = "JWT_Token_expired !",value = "{\"message\":\"JWT_Token_already_expired_!\"}"),
+	               
+	             },schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),     	      
+	       
+	       
 	       @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Notfound" )
 
 	})

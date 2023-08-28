@@ -27,6 +27,7 @@ public class Authfilter extends OncePerRequestFilter{
 	private Userinfouserdetailservice userinfouserdetailservice;
 	
 	private HandlerExceptionResolver exceptionResolver;
+	
 	@Autowired
 	public Authfilter(HandlerExceptionResolver exceptionResolver) {
 		this.exceptionResolver = exceptionResolver;
@@ -57,7 +58,7 @@ public class Authfilter extends OncePerRequestFilter{
 		filterChain.doFilter(request, response);
 		
 		}
-		catch (ExpiredJwtException | SignatureException ex) {
+		catch (Exception ex) {
             exceptionResolver.resolveException(request, response, null, ex);
 		}
 		}
