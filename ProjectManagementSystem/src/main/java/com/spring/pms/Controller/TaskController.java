@@ -29,15 +29,19 @@ import com.spring.pms.Response.Taskapiresponse;
 import com.spring.pms.Service.ApiRespons;
 import com.spring.pms.Service.TaskService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
 @RequestMapping("/Task")
 @RestController
+@SecurityRequirement(name="Bearer Authentication")
+
 public class TaskController {
 	@Autowired
 	private TaskService taskService;
@@ -55,6 +59,8 @@ public class TaskController {
  
        @ApiResponse(responseCode = "204", content = { @Content(schema = @Schema(),mediaType = "application/json")},description = "No Content" )
 })  
+	@Operation(summary = "Getting all the tasks ")
+
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
 	@GetMapping("/")
 	public ResponseEntity< ApiRespons<List<Task>>>getAllTasks()
@@ -84,6 +90,7 @@ public class TaskController {
        @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Notfound" ),
        @ApiResponse(responseCode = "204", content = { @Content(schema = @Schema())},description = "No Content" )
 })
+	@Operation(summary = "Getting the task with id ")
 
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
 
@@ -133,6 +140,7 @@ public class TaskController {
 
 	
 		@PreAuthorize("hasRole('ROLE_MANAGER')")
+		@Operation(summary = "Posting the task with userid and projectid")
 
 	@PostMapping("/{id}/{pid}")
 	public ResponseEntity<ApiRespons<String>> postTask(@Valid @RequestBody Task task, @PathVariable int id,@PathVariable int pid)
@@ -172,6 +180,7 @@ public class TaskController {
 
 })
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
+	@Operation(summary = "Updating the task details")
 
 	@PutMapping("/{id}")
 	public  ResponseEntity< ApiRespons<Task>> updateTask(@Valid @RequestBody Task task ,  @PathVariable long id)
@@ -202,6 +211,7 @@ public class TaskController {
 
 	})
 		@PreAuthorize("hasRole('ROLE_MANAGER')")
+		@Operation(summary = "Deleting the task details")
 
 	@DeleteMapping("/{id}")
 	public  ResponseEntity<ApiRespons<String>>  deleteTask( @PathVariable long id)

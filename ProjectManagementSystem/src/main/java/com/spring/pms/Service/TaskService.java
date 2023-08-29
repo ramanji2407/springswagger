@@ -35,13 +35,23 @@ public class TaskService {
 	public void postTask( Task task,  int id, int pid)
 	{
 		Project project=projectRepository.findById(pid);
+		if(project==null)
+		{
+			throw new DetailsNotFoundException("Project_was_not_found");
+
+		}
 		if(project.getStatus().equals("Inactive"))
 		{
 			throw new BadRequestException("Cannot_create_task_beacuse_Project was_Inactive");
 		}
+		User user=userRepo.findById(id);
+		if(user==null)
+		{
+			throw new DetailsNotFoundException("User_was_not_found");
+
+		}
 		project.getTasks().add(task);
 		//projectRepository.save(project);
-		User user=userRepo.findById(id);
 		user.getTasks().add(task);
 		//userRepo.save(user);
 		taskRepository.save(task);

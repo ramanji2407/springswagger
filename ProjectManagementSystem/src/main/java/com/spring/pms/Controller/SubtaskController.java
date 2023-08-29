@@ -23,21 +23,24 @@ import com.spring.pms.Response.Response400;
 import com.spring.pms.Response.Response401;
 import com.spring.pms.Response.Response403;
 import com.spring.pms.Response.Response404;
-import com.spring.pms.Response.Response409;
 import com.spring.pms.Response.Response500;
 import com.spring.pms.Response.Subtaskapiresponse;
 import com.spring.pms.Service.ApiRespons;
 import com.spring.pms.Service.SubTaskService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/Subtask")
+@SecurityRequirement(name="Bearer Authentication")
+
 public class SubtaskController {
 	@Autowired
 	private SubTaskService subTaskService;
@@ -57,8 +60,10 @@ public class SubtaskController {
 
 
 })  	
+	@SecurityRequirement(name = "Bearer Authentication")
 
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
+	@Operation(summary = "Getting all the subtask details")
 
 	@GetMapping("/")
 	public ResponseEntity<ApiRespons<List<Subtask>>> getAllSubtasks()
@@ -90,6 +95,7 @@ public class SubtaskController {
 })	
 
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
+	@Operation(summary = "Getting  the subtask details for a given id")
 
 	@GetMapping("/{id}")
 	public ResponseEntity<ApiRespons<Subtask>> getAllSubtask(@PathVariable long id)
@@ -132,6 +138,8 @@ public class SubtaskController {
 	             },schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),            
 
 	})
+		@Operation(summary = "Posting  the subtask details for a given task id")
+
 	
     @PreAuthorize("hasRole('ROLE_MANAGER')")
 	@PostMapping("/{id}")
@@ -172,6 +180,8 @@ public class SubtaskController {
 })
 
 	@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_MANAGER')")
+	@Operation(summary = "Updating  the subtask details for a given id")
+
 
 	@PutMapping("/{id}")
 	public ResponseEntity< ApiRespons<Subtask>> updateSubtask(@Valid @RequestBody Subtask subtask ,  @PathVariable long id)
@@ -203,6 +213,8 @@ public class SubtaskController {
 	})
 
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
+	@Operation(summary = "Deleting  the subtask details for a given task id")
+
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<ApiRespons<String>> deleteSubtask( @PathVariable long id)

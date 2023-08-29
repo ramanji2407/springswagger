@@ -42,9 +42,11 @@ public class User {
 	private String name;
 	@Schema( example = "pasupuleti")
 	@NotEmpty(message = "first_name_shoulde_not_be_empty")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "first_name should contain only alphabetic characters")
 	private String first_name;
 	@Schema( example = "ramanjaneyulu")
 	@NotEmpty(message = "last_name_shoulde_not_be_empty")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "last_name should contain only alphabetic characters")
 	private String last_name;
 	@Schema( example = "ram")
 	@NotEmpty(message = "Pasword_shoulde_not_be_empty")
@@ -54,15 +56,14 @@ public class User {
 	@NotEmpty(message = "Email Shoulde not be empty")
 	private String email;
 	@Schema(example = "ROLE_MANAGER")
-	@Pattern(regexp = "^(ROLE_MANAGER|ROLE_USER)$",message = "Role_shoulde_be_either_user_admin")
+	@Pattern(regexp = "^(ROLE_MANAGER|ROLE_USER)$",message = "Role_shoulde_be_ROLE_MANAGER||ROLE_USER")
 	private String role;
 	
 	@Schema(example = "Backend")
-	@Pattern(regexp = "^(Backend|Frontend)$" ,message = "Department_should_be_either_backend_frontend")
+	@Pattern(regexp = "^(Backend|Frontend)$" ,message = "Department_should_be_either_Backend||Frontend")
 	private String department; 
 	
-	@JsonIgnore
-	@ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER )
+	@ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY )
 	Set<Project>projects;
 
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)

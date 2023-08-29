@@ -39,10 +39,11 @@ public class Project {
 	private int id;
 	@NotEmpty(message = "Project_name_shoulde_not_be_empty")
 	@Column(name="Project_name")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "Task name should contain only alphabetic characters")
 	@Schema( example = "KitchenManagementSystem")
-
 	private String name;
 	@NotEmpty(message = "Description_shoulde_not_be_empty")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "Task name should contain only alphabetic characters")
 	@Schema( example = "Develop Website ")
 	private String description;
 	@JsonFormat(shape =JsonFormat.Shape.STRING,pattern = "MM/dd/yyyy")
@@ -55,6 +56,7 @@ public class Project {
 	@Schema(example = "Active")
 
 	private String status;
+	@JsonIgnore
 	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "projects")
 	//@JoinTable(name = "Project_User_table",joinColumns = {@JoinColumn(name="Project_id",referencedColumnName = "id")},inverseJoinColumns = {@JoinColumn(name="User_id",referencedColumnName = "id")})
 	Set<User>user;

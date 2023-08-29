@@ -36,7 +36,7 @@ public class Subtask {
 	@JsonFormat(shape =JsonFormat.Shape.STRING,pattern = "MM/dd/yyyy")
 	@Schema(example = "08/08/2022")
     private Date due_date;
-	@Pattern(regexp = "^(Completed|InProgress)$")
+	@Pattern(regexp = "^(Completed|InProgress)$",message = "must match Completed|InProgress ")
 	@Schema(example = "Completed")
 	private String status;
     @JsonIgnore

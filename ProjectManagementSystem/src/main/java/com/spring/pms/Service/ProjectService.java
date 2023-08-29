@@ -43,15 +43,15 @@ public class ProjectService {
 		return projectRepo.findById(id);
 	}
 	
-	public void postProject( Project project, int id)
+	public void postProject( Project project)
 	{
 		//Set<User> user = project.getUser();
 		projectRepo.save(project);
 
-		User user = userRepo.findById(id);
-		user.getProjects().add(project);
+//		User user = userRepo.findById(id);
+//		user.getProjects().add(project);
 	    //user.forEach(users -> users.setPassword(encoder.encode(users.getPassword())));
-		projectRepo.save(project);
+	//	projectRepo.save(project);
 		
 	}
 	

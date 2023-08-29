@@ -22,11 +22,27 @@ import io.jsonwebtoken.security.SignatureException;
 
 @RestControllerAdvice
 public class GlobalExceptionalHandler {
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<Map<String, String>>handleMethodArgumentNotValidException(MethodArgumentNotValidException ex)
+	{            System.out.println(9);
+
+	Map<String, String>response=new HashMap<String, String>();	
+	ex.getBindingResult().getAllErrors().forEach(
+			(error)->{
+				String fieldname=((FieldError)error).getField();
+				String message=error.getDefaultMessage();
+				System.out.println(fieldname);
+				System.out.println(message);
+
+				response.put(fieldname, message);
+			});
+		return new  ResponseEntity<Map<String,String>>(response,HttpStatus.BAD_REQUEST);
+	}
 	
 	@ExceptionHandler(Exception.class)
     public ProblemDetail handleSecurityException(Exception ex) {
         ProblemDetail errorDetail = null;
-        System.out.println(9);
+      //  System.out.println(9);
 
         if (ex instanceof BadCredentialsException) {
             System.out.println(9);
@@ -82,19 +98,7 @@ public class GlobalExceptionalHandler {
 		notfound.setStatus(HttpStatus.CONFLICT);
 		return new ResponseEntity<>(notfound,HttpStatus.CONFLICT);
 	 }
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<Map<String, String>>handleMethodArgumentNotValidException(MethodArgumentNotValidException ex)
-	{            System.out.println(9);
-
-	Map<String, String>response=new HashMap<String, String>();	
-	ex.getBindingResult().getAllErrors().forEach(
-			(error)->{
-				String fieldname=((FieldError)error).getField();
-				String message=error.getDefaultMessage();
-				response.put(fieldname, message);
-			});
-		return new  ResponseEntity<Map<String,String>>(response,HttpStatus.BAD_REQUEST);
-	}
+	
 	@ExceptionHandler(BadRequestException.class)
 	 public ResponseEntity<?> handleBadrequeste(BadRequestException alreadyExist)
 	 {            System.out.println(9);

@@ -37,11 +37,13 @@ import com.spring.pms.Service.Jwtservice;
 import com.spring.pms.Service.ProjectService;
 import com.spring.pms.Service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 
@@ -71,7 +73,11 @@ private	UserService userService;
 
 
 })  	
+	@Operation(summary = "Getting all the users   ")
+
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
+	@SecurityRequirement(name="Bearer Authentication")
+
 	@GetMapping("/")
 	public ResponseEntity< ApiRespons<List<User>>> getAllUsers()
 	{
@@ -100,6 +106,9 @@ private	UserService userService;
        @ApiResponse(responseCode = "204", content = { @Content(schema = @Schema())},description = "No Content" )
 })
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
+	@Operation(summary = "Getting  the user with id   ")
+	@SecurityRequirement(name="Bearer Authentication")
+
 
 	@GetMapping("/{id}")
 	public ResponseEntity< ApiRespons<User>> getAllUser(@PathVariable int id)
@@ -135,6 +144,8 @@ private	UserService userService;
        
 
 })
+	@Operation(summary = "Posting  the user details  ")
+
 
 	@PostMapping("/")
 	public ResponseEntity<ApiRespons<String>> postUser(@Valid @RequestBody User user)
@@ -147,7 +158,7 @@ private	UserService userService;
 		return new ResponseEntity<>(response,HttpStatus.CREATED);
 	}
 	
-	@ApiResponses({
+		@ApiResponses({
         @ApiResponse(responseCode = "200", content = {
             @Content(schema = @Schema(implementation =Userapiresponse.class ), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(examples = {@ExampleObject(name="DatbaseConnection",value = "{\"message\":\"Check_UserName_And_Password_of_DataBase\"}")}, schema = @Schema(implementation = Response500.class,example = "{ \"status\": 500, \"message\": \"Database error\" }"),mediaType = "application/json")},description = "Internal Server Error" )
@@ -171,6 +182,9 @@ private	UserService userService;
 
 
 })
+	@Operation(summary = "Updating  the user details  ")
+		@SecurityRequirement(name="Bearer Authentication")
+
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
 	@PutMapping("/{id}")
 	public ResponseEntity<ApiRespons<User>>  updateUser(@Valid @RequestBody User user ,  @PathVariable int id)
@@ -188,12 +202,13 @@ private	UserService userService;
 	}
 	 	
 	@ApiResponses({
-        @ApiResponse(responseCode = "200", content = {
-            @Content(schema = @Schema(implementation = ResponseMessage.class), mediaType = "application/json") },description = "Created"),
+        @ApiResponse(responseCode = "201", content = {
+            @Content(schema = @Schema(implementation = Response201.class), mediaType = "application/json") },description = "Created"),
         @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
        
 
 })
+	@Operation(summary = "Generating token with the username and passsword ")
 
 	@PostMapping("/token")
 	@ResponseBody
@@ -211,5 +226,7 @@ private	UserService userService;
 	        }
 
 	}
+	
+
 	
 }

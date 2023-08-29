@@ -27,20 +27,26 @@ import com.spring.pms.Response.Response500;
 import com.spring.pms.Service.ApiRespons;
 import com.spring.pms.Service.ProjectService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/Project")
+@SecurityRequirement(name="Bearer Authentication")
 public class ProjectController {
 	
 	@Autowired 
 	private ProjectService projectService;
-	@ApiResponses({
+    @Operation(summary = "Getting all the Projects  ")
+
+    @ApiResponses({
 	    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Projectapiresponse.class), mediaType = "application/json") },description = "Ok"),
 	    @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class),mediaType = "application/json")},description = "Internal Server Error" )
 	   ,@ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
@@ -52,7 +58,8 @@ public class ProjectController {
 	           
 	         },schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
 	   @ApiResponse(responseCode = "204", content = { @Content(schema = @Schema(),mediaType = "application/json")},description = "No Content" )
-	}) 
+	})
+
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
 	@GetMapping("/")
 	public ResponseEntity< ApiRespons<List<Project>>> getAllProjects()
@@ -66,6 +73,8 @@ public class ProjectController {
 
 		 return new ResponseEntity<>(response,HttpStatus.OK) ;
 	}
+    @Operation(summary = "Getting the Project with id  ")
+
 	@ApiResponses({
         @ApiResponse(responseCode = "200", content = {
             @Content(schema = @Schema(implementation = Projectapiresponse.class), mediaType = "application/json") },description = "Ok"),
@@ -92,6 +101,8 @@ public class ProjectController {
 
 		 return new ResponseEntity<>(response,HttpStatus.OK) ;
 	}
+    @Operation(summary = "Posting  the Project  ")
+
 	 @ApiResponses({
 	        @ApiResponse( responseCode = "201", content = {
 	            @Content(schema = @Schema(implementation = Response201.class), mediaType = "application/json") },description = "Created"),
@@ -114,17 +125,19 @@ public class ProjectController {
 
 
 	})
-	 
+
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
 	@PostMapping("/")
-	public ResponseEntity<ApiRespons<String>>postProject( @Valid @RequestBody Project project,@PathVariable int id)
+	public ResponseEntity<ApiRespons<String>>postProject( @Valid @RequestBody Project project)
 	{
 		//System.out.println("enter");
-		projectService.postProject(project ,id);
+		projectService.postProject(project );
         ApiRespons<String> response = new ApiRespons<>("Sucess", "Sucessfully_Created_Project");
 
 		return new ResponseEntity<>(response,HttpStatus.CREATED);
 	}
+    @Operation(summary = "Updating  the Project details ")
+
 	@ApiResponses({
         @ApiResponse(responseCode = "200", content = {
             @Content(schema = @Schema(implementation =Projectapiresponse.class ), mediaType = "application/json") },description = "Ok"),
@@ -166,6 +179,9 @@ public class ProjectController {
 		 return new ResponseEntity<>(response,HttpStatus.OK) ;
 	}
 	
+    @Operation(summary = "Assigning the Project with list of users ")
+
+	
 	 @ApiResponses({
 	        @ApiResponse( responseCode = "201", content = {
 	            @Content(schema = @Schema(implementation = Response201.class), mediaType = "application/json") },description = "Created"),
@@ -198,6 +214,6 @@ public class ProjectController {
 
 
 	}
-	
+  
 
 }
