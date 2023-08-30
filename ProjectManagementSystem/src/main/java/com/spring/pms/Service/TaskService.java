@@ -1,6 +1,7 @@
 package com.spring.pms.Service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,20 @@ public class TaskService {
 			throw new DetailsNotFoundException("User_was_not_found");
 
 		}
+Set<Project> projects = user.getProjects();
+String projectFound=null;
+for(Project p:projects)
+{
+	if(p.getName().equals(project.getName()))
+			{
+		projectFound="found";
+			}
+}
+	if(projectFound==null)	
+	{
+		throw new BadRequestException("Cannot_create_task_beacuse_Project was_not_assigned_to_user");
+
+	}
 		project.getTasks().add(task);
 		//projectRepository.save(project);
 		user.getTasks().add(task);

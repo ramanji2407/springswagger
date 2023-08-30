@@ -99,6 +99,7 @@ public class ProjectService {
 	        users.forEach(e->e.getProjects().add(project));
 	        
 	        projectRepo.save(project);
+	        userRepo.saveAll(users);
 	    }
 
 }

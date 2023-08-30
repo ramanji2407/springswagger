@@ -34,11 +34,11 @@ public class Task {
 		
 		@Schema( example = " Design UI")
 		@NotEmpty(message = "Task_name_shoulde_not_be_empty")
-	    @Pattern(regexp = "^[a-zA-Z]+$", message = "Task name should contain only alphabetic characters")
+	 //   @Pattern(regexp = "^[a-zA-Z]+$", message = "Task name should contain only alphabetic characters")
 
 	    private String name;
 		
-	    @Pattern(regexp = "^[a-zA-Z]+$", message = "Task name should contain only alphabetic characters")
+	    //@Pattern(regexp = "^[a-zA-Z]+$", message = "Task name should contain only alphabetic characters")
 		@Schema( example = "Create UI mockups  ")
 		@NotEmpty(message = "Description_shoulde_not_be_empty")
 	    

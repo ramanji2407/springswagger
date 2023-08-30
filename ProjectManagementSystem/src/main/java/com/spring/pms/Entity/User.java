@@ -65,7 +65,8 @@ public class User {
 	
 	@ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY )
 	Set<Project>projects;
-
+	
+    @JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
 	@JoinColumn(name = "User_id")
 	private List<Task>tasks;

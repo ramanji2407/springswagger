@@ -168,6 +168,8 @@ private	UserService userService;
                @ExampleObject(name = "Nameempty",value = "{\"message\":\"Name_should_not_be_empty\"}"),
                @ExampleObject(name = "Paswordempty",value = "{\"message\":\"Pasword_shoulde_not_be_empty\"}"),
                @ExampleObject(name = "EmailPattern",value = "{\"message\":\"Pattern_shoulde_be_An_email_address_consists_of_a_username,_an_@_sign,_and_a_domain_name\"}"),
+               @ExampleObject(name = "Emailempty",value = "{\"message\":\"Email_shoulde_not_be_empty\"}"),
+
                @ExampleObject(name = "Roletype",value = "{\"message\":\"Role_shoulde_be_either_user_admin\"}"),
                @ExampleObject(name = "Departmenttype",value = "{\"message\":\"Department_should_be_either_backend_frontend\"}"),
              },schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),

@@ -27,6 +27,8 @@ public class Subtask {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Schema( example = "1")
     private Long id;
+ //   @Pattern(regexp = "^[a-zA-Z]+$", message = "Subtask_name should contain only alphabetic characters")
+
 	@NotEmpty(message = "Subtask_name_shoulde_not_be_empty")
 	@Schema( example = "Wireframe Design")
     private String name;
