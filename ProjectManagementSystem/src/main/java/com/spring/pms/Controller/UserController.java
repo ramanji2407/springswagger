@@ -1,6 +1,7 @@
 package com.spring.pms.Controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spring.pms.Dto.AcessTokenResponseDto;
+import com.spring.pms.Dto.AcessTokenResponseDto.AcessTokenResponseDtoBuilder;
+import com.spring.pms.Dto.RefreshTokenRequest;
 import com.spring.pms.Dto.Request;
 import com.spring.pms.Entity.Project;
+import com.spring.pms.Entity.RefreshToken;
 import com.spring.pms.Entity.User;
 import com.spring.pms.Exceptions.DetailsNotFoundException;
 import com.spring.pms.Response.Response201;
@@ -35,6 +40,7 @@ import com.spring.pms.Response.Userapiresponse;
 import com.spring.pms.Service.ApiRespons;
 import com.spring.pms.Service.Jwtservice;
 import com.spring.pms.Service.ProjectService;
+import com.spring.pms.Service.RefreshTokenService;
 import com.spring.pms.Service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -58,6 +64,8 @@ private	UserService userService;
 	private AuthenticationManager authmanager;
 	@Autowired 
 	private ProjectService projectService;
+	@Autowired
+	private RefreshTokenService refreshTokenService;
 	@ApiResponses({
         @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Userapiresponse.class), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class),mediaType = "application/json")},description = "Internal Server Error" )
@@ -215,20 +223,49 @@ private	UserService userService;
 	@PostMapping("/token")
 	@ResponseBody
 	//public ResponseEntity<ResponseMessage> generateToken(@RequestBody Request request) {
-	public String generateToken(@RequestBody Request request) {
+	public AcessTokenResponseDto generateToken(@RequestBody Request request) {
 
 
 
 		 Authentication authentication = authmanager.authenticate(
           new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 		 if (authentication.isAuthenticated()) {
-	            return jwtservice.generateToken(request.getUsername());
+			 RefreshToken createRefreshToken = refreshTokenService.createRefreshToken(request.getUsername());
+	             String generateToken = jwtservice.generateToken(request.getUsername());
+	             return AcessTokenResponseDto.builder().jwtToken(generateToken).refreshToken(createRefreshToken.getToken()).build();
+
 	        } else {
 	            throw new UsernameNotFoundException("invalid user request !");
 	        }
 
 	}
-	
+	 @PostMapping("/refreshToken")
+	    public AcessTokenResponseDto refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+		 
+//		 return refreshTokenService.findByToken(refreshTokenRequest.getToken())
+//	                .map(refreshTokenService::verifyExpiration)
+//	                .map(RefreshToken::getUser)
+//	                .map(userInfo -> {
+//	                    String accessToken = jwtservice.generateToken(userInfo.getName());
+//	                    return AcessTokenResponseDto.builder().jwtToken(accessToken).refreshToken(refreshTokenRequest.getToken()).build();
+//	                            
+//	                }).orElseThrow(() -> new RuntimeException(
+//	                        "Refresh token is not in database!"));
+			//System.out.println(refreshTokenRequest.getToken());
+
+		 RefreshToken findByToken = refreshTokenService.findByToken(refreshTokenRequest.getToken()).get();
+		 
+		//System.out.println(findByToken.getToken());
+		 refreshTokenService.verifyExpiration(findByToken);
+		 String name = findByToken.getUser().getName();
+		 String accessToken = jwtservice.generateToken(name);
+		 AcessTokenResponseDto dto= new AcessTokenResponseDto();
+		 dto.setJwtToken(accessToken);
+		 dto.setRefreshToken(refreshTokenRequest.getToken());
+		return dto;
+	    }
+	    
 
 	
 }
+

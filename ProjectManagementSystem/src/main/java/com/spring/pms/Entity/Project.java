@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import springfox.documentation.annotations.ApiIgnore;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -56,8 +58,8 @@ public class Project {
     @Schema(type = "string", allowableValues = { "Active", "Inactive" }, example = "Active")
 	private String status;
 	@JsonIgnore
-	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-	Set<User>user;
+	 @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	 Set<User>user;
 	
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
 	@JoinColumn(name = "project_id")

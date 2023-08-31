@@ -53,7 +53,7 @@ public class Task {
 		private String status;
 		
 		@JsonIgnore
-		@ManyToOne
+		@ManyToOne(fetch = FetchType.LAZY)
 		private Project project;
 		@ JsonIgnore
 		@ManyToOne

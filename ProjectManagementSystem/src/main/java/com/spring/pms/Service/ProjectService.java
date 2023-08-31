@@ -75,31 +75,53 @@ public class ProjectService {
 	}
 	
 	 public void createProjectWithUsers(Projectdto projectDTO, int id) {
-		 Project project1=projectRepo.findById(id);
-			if(project1==null)
-			{
-				throw new DetailsNotFoundException("Projects_were_not_found_with_id");
-			}
-
+//		 Project project1=projectRepo.findById(id);
+//			if(project1==null)
+//			{
+//				throw new DetailsNotFoundException("Projects_were_not_found_with_id");
+//			}
+//
+//		 
+//		 Project project = projectRepo.findById(id);
+//		 List<Integer> userIds = projectDTO.getUserIds();
+//		 for(int i:userIds)
+//		 {
+//			 User users1 = userRepo.findById(i);
+//			 if(users1==null)
+//			 {
+//					throw new DetailsNotFoundException("Users_were_not_found_with_id");
+//
+//			 }
+//		 }
+//		 
+//	        List<User> users = userRepo.findAllById(projectDTO.getUserIds());
+//	        
+//	        users.forEach(e->e.getProjects().add(project));
+//	        
+//	        projectRepo.save(project);
+//	        userRepo.saveAll(users);
 		 
-		 Project project = projectRepo.findById(id);
+		 
+		 User users1 = userRepo.findById(id);
+		 if(users1==null)
+				{
+					throw new DetailsNotFoundException("Projects_were_not_found_with_id");
+				}
 		 List<Integer> userIds = projectDTO.getUserIds();
 		 for(int i:userIds)
 		 {
-			 User users1 = userRepo.findById(i);
-			 if(users1==null)
-			 {
-					throw new DetailsNotFoundException("Users_were_not_found_with_id");
+             Project project = projectRepo.findById(i);
+             if(project==null)
+    			 {
+    					throw new DetailsNotFoundException("Users_were_not_found_with_id");
+    
+    			 }
+    		 users1.getProjects().add(project);
 
-			 }
+			
 		 }
-		 
-	        List<User> users = userRepo.findAllById(projectDTO.getUserIds());
+		 userRepo.save(users1);
 	        
-	        users.forEach(e->e.getProjects().add(project));
-	        
-	        projectRepo.save(project);
-	        userRepo.saveAll(users);
 	    }
 
 }

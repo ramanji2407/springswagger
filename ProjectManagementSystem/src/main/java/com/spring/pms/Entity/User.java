@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -62,8 +63,15 @@ public class User {
 	@Schema(example = "Backend")
 	@Pattern(regexp = "^(Backend|Frontend)$" ,message = "Department_should_be_either_Backend||Frontend")
 	private String department; 
-	
-	@ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY )
+	 @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	    @JoinTable(name = "Users_Project_TABLE",
+	            joinColumns = {
+	                    @JoinColumn(name = "user_id", referencedColumnName = "id")
+	            },
+	            inverseJoinColumns = {
+	                    @JoinColumn(name = "project_id", referencedColumnName = "id")
+	            }
+	    )
 	Set<Project>projects;
 	
     @JsonIgnore

@@ -3,6 +3,7 @@ package com.spring.pms.Exceptions;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -74,6 +75,11 @@ public class GlobalExceptionalHandler {
             errorDetail = ProblemDetail
                     .forStatusAndDetail(HttpStatusCode.valueOf(403), ex.getMessage());
             errorDetail.setProperty("access_denied_reason", "JWT Token already expired !");
+        }
+        if (ex instanceof NoSuchElementException) {
+            errorDetail = ProblemDetail
+                    .forStatusAndDetail(HttpStatusCode.valueOf(404), ex.getMessage());
+            errorDetail.setProperty("access_denied_reason", "Refreshtoken not found !");
         }
 
         return errorDetail;

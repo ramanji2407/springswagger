@@ -1,5 +1,6 @@
 package com.spring.pms.Controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -205,7 +206,7 @@ public class ProjectController {
 	})
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
 	@PostMapping("/{id}")
-	ResponseEntity<ApiRespons<String>>assigningUserToProject( @Valid @RequestBody Projectdto projectdto, @PathVariable int id)
+public	ResponseEntity<ApiRespons<String>>assigningUserToProject( @Valid @RequestBody Projectdto projectdto, @PathVariable int id)
 	{
 		
 		projectService.createProjectWithUsers(projectdto, id);
@@ -214,6 +215,14 @@ public class ProjectController {
 
 
 	}
+	@PreAuthorize("hasRole('ROLE_MANAGER')")
+
+    @GetMapping("/user")
+    public ResponseEntity<ApiRespons<String>> getLoginUsername(Principal principal)
+    {
+		  ApiRespons<String> response = new ApiRespons<>("Sucess", "username is "+principal.getName());
+
+			return new ResponseEntity<>(response,HttpStatus.OK);    }
   
 
 }
