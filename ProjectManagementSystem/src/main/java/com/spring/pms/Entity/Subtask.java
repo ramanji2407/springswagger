@@ -3,7 +3,10 @@ package com.spring.pms.Entity;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
@@ -22,7 +25,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Subtask {
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+
+public class Subtask extends serializable{
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Schema( example = "1")
@@ -41,13 +46,14 @@ public class Subtask {
 	@Pattern(regexp = "^(Completed|InProgress)$",message = "must match Completed|InProgress ")
 	@Schema(example = "Completed")
 	private String status;
-    @JsonIgnore
+
     @ManyToOne
     private Task task;
-    @JsonIgnore
+
     @ManyToOne
     @JoinColumn(name = "assigned_user_id") 
-    private User user;
+
+    private User users;
 
 
   

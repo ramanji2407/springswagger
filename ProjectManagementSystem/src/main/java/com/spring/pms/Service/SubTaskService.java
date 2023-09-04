@@ -51,10 +51,13 @@ public class SubTaskService {
 		{
 			throw new BadRequestException("Cannot_create_sub_task_beacuse_task was_completed");
 		}
+		subtask.setTask(task);
 		task.getSubtask().add(subtask);
 		//taskRepository.save(task);
 		int userid=task.getUser().getId();
+		System.out.println(userid);
 		User user=userRepo.findById(userid);
+		subtask.setUsers(user);
 		user.getSubtasks().add(subtask);
 	//	userRepo.save(user);
 		subtaskRepository.save(subtask);

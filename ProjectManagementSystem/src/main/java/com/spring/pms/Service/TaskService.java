@@ -65,8 +65,12 @@ for(Project p:projects)
 		throw new BadRequestException("Cannot_create_task_beacuse_Project was_not_assigned_to_user");
 
 	}
+	task.setProject(project);
+	task.setUser(user);
+
 		project.getTasks().add(task);
 		//projectRepository.save(project);
+	//	task.setUser(user);
 		user.getTasks().add(task);
 		//userRepo.save(user);
 		taskRepository.save(task);

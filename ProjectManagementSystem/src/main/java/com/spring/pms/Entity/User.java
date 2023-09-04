@@ -3,7 +3,10 @@ package com.spring.pms.Entity;
 import java.util.List;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
@@ -13,8 +16,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -30,6 +31,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+
 @Table(name = "User_details",uniqueConstraints = {@UniqueConstraint(name="name_unique",columnNames ="User_name" )})
 public class User {
 	@Id
@@ -63,24 +66,21 @@ public class User {
 	@Schema(example = "Backend")
 	@Pattern(regexp = "^(Backend|Frontend)$" ,message = "Department_should_be_either_Backend||Frontend")
 	private String department; 
-	 @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	    @JoinTable(name = "Users_Project_TABLE",
-	            joinColumns = {
-	                    @JoinColumn(name = "user_id", referencedColumnName = "id")
-	            },
-	            inverseJoinColumns = {
-	                    @JoinColumn(name = "project_id", referencedColumnName = "id")
-	            }
-	    )
+
+	@ManyToMany(mappedBy = "users",fetch = FetchType.LAZY)
+    @JsonBackReference
 	Set<Project>projects;
-	
-    @JsonIgnore
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
-	@JoinColumn(name = "User_id")
+
+
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true,mappedBy = "user")
+
+
 	private List<Task>tasks;
-    @JsonIgnore
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
-    @JoinColumn(name = "assigned_user_id") 
+    
+    
+    
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true,mappedBy = "users")
+
  	private List<Subtask>subtasks;
 
 	
