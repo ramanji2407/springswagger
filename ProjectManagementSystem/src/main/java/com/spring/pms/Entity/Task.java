@@ -3,8 +3,13 @@ package com.spring.pms.Entity;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
@@ -26,6 +31,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Task {
 		@Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,16 +57,21 @@ public class Task {
 		@Schema(example = "Completed")
 		@Pattern(regexp = "^(Completed|InProgress)$")
 		private String status;
-		
-		@JsonIgnore
-		@ManyToOne
+	
+        @JsonIgnore
+		@ManyToOne(fetch = FetchType.LAZY)
+		@JoinColumn(name="project_id")
 		private Project project;
-		@ JsonIgnore
-		@ManyToOne
+	
+        @JsonIgnore
+		@ManyToOne()
+		@JoinColumn(name="user_id")
+
 		private User user;
-		
-		@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
-		@JoinColumn(name ="Task_id")
+	
+
+		@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true,mappedBy = "task")
+
 		List<Subtask>subtask;
 
 }

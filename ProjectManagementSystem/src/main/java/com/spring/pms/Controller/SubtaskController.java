@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.pms.Entity.Subtask;
 import com.spring.pms.Exceptions.DetailsNotFoundException;
+import com.spring.pms.Response.ExceptionResponseMessage;
 import com.spring.pms.Response.Response200;
 import com.spring.pms.Response.Response201;
 import com.spring.pms.Response.Response400;
@@ -38,7 +39,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/Subtask")
+@RequestMapping("/subtask")
 @SecurityRequirement(name="Bearer Authentication")
 
 public class SubtaskController {
@@ -70,7 +71,7 @@ public class SubtaskController {
 	{
 		if(subTaskService.getAllSubtasks().isEmpty())
 		{
-			 throw new DetailsNotFoundException("Subtasks_wre_not_found");
+			 throw new DetailsNotFoundException(ExceptionResponseMessage.SUB_TASK_DETAILS_NOT_FOUND.getMessage());
 
 		}
 		ApiRespons<List<Subtask>> response = new ApiRespons<>("Sucess", subTaskService.getAllSubtasks());
@@ -102,7 +103,7 @@ public class SubtaskController {
 	{
 		if( subTaskService.getAllSubtask(id)==null)
 		{
-			 throw new DetailsNotFoundException("SubTasks_wre_not_found_with_that_id");
+			 throw new DetailsNotFoundException(ExceptionResponseMessage.SUB_TASK_DETAILS_NOT_FOUND.getMessage()+id);
 
 		}
 		ApiRespons<Subtask> response = new ApiRespons<>("Sucess",subTaskService.getAllSubtask(id));
@@ -142,7 +143,7 @@ public class SubtaskController {
 
 	
     @PreAuthorize("hasRole('ROLE_MANAGER')")
-	@PostMapping("/{id}")
+	@PostMapping("/task/{id}")
 	public  ResponseEntity<ApiRespons<String>> postSubtask(@Valid @RequestBody Subtask subtask, @PathVariable long id)
 	{
 	
@@ -188,7 +189,7 @@ public class SubtaskController {
 	{
 		if(subTaskService.getAllSubtask(id)==null)
 		{
-			 throw new DetailsNotFoundException("SubTasks_wre_not_found_with_that_id_to_update");
+			 throw new DetailsNotFoundException(ExceptionResponseMessage.SUB_TASK_DETAILS_NOT_FOUND.getMessage()+"id  :"+id+"to_update");
 	
 		}
         ApiRespons<Subtask> response = new ApiRespons<>("Sucess",subTaskService.updateSubtask(subtask, id));
@@ -221,7 +222,7 @@ public class SubtaskController {
 	{
 		if(subTaskService.getAllSubtask(id)==null)
 		{
-			 throw new DetailsNotFoundException("SubTasks_wre_not_found_with_that_id_to_Delete");
+			 throw new DetailsNotFoundException(ExceptionResponseMessage.SUB_TASK_DETAILS_NOT_FOUND.getMessage()+id+"to_delete");
 	
 		}
 		subTaskService.deleteSubtask(id);

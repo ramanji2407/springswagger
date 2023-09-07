@@ -2,6 +2,7 @@ package com.spring.pms.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.spring.pms.Dto.UserDto;
 import com.spring.pms.Entity.Project;
 import com.spring.pms.Entity.User;
 import com.spring.pms.Exceptions.BadRequestException;
@@ -30,13 +32,34 @@ public class UserService {
 	@Autowired
 
 	private PasswordEncoder encoder;
-	public List<User>getAllUsers()
+	public List<UserDto>getAllUsers()
 	{
-		return userRepo.findAll();
+		List<User> findUser = userRepo.findAll();
+		List<UserDto> userDtoList = findUser.stream()
+		    .map(user -> {
+		        UserDto userDto = new UserDto();
+		        userDto.setId(user.getId());
+		        userDto.setDepartment(user.getDepartment());
+		        userDto.setEmail(user.getEmail());
+		        userDto.setName(user.getFirst_name()+" "+user.getLast_name());
+		        userDto.setRole(user.getRole());
+		        return userDto;
+		    })
+		    .collect(Collectors.toList()); 
+		return userDtoList;
 	}
-	public User getAllUser( int id)
+	public UserDto getAllUser( int id)
+	
 	{
-		return userRepo.findById(id);
+		
+		User user= userRepo.findById(id);
+		
+		 UserDto userDto = new UserDto();
+	        userDto.setId(user.getId());
+	        userDto.setDepartment(user.getDepartment());
+	        userDto.setEmail(user.getEmail());
+	        userDto.setName(user.getFirst_name()+" "+user.getLast_name());	        userDto.setRole(user.getRole());
+	        return userDto;
 	}
 	
 	public void postUser( User user )
@@ -76,3 +99,5 @@ public class UserService {
 
 
 }
+
+

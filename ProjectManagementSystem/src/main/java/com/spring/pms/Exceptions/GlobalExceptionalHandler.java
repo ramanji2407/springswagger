@@ -3,13 +3,16 @@ package com.spring.pms.Exceptions;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -75,12 +78,29 @@ public class GlobalExceptionalHandler {
                     .forStatusAndDetail(HttpStatusCode.valueOf(403), ex.getMessage());
             errorDetail.setProperty("access_denied_reason", "JWT Token already expired !");
         }
-
+        if (ex instanceof NoSuchElementException) {
+            errorDetail = ProblemDetail
+                    .forStatusAndDetail(HttpStatusCode.valueOf(404), ex.getMessage());
+            errorDetail.setProperty("access_denied_reason", "Refreshtoken not found !");
+        }
+        if (ex instanceof HttpMessageNotReadableException) {
+            errorDetail = ProblemDetail
+                    .forStatusAndDetail(HttpStatusCode.valueOf(400), ex.getMessage());
+            errorDetail.setProperty("access_denied_reason", "Date_pattern_should_be_mm/dd/yyy_ !");
+        }
+//        else
+//        {
+//        	errorDetail = ProblemDetail
+//                    .forStatusAndDetail(HttpStatusCode.valueOf(500), ex.getMessage());
+//            errorDetail.setProperty("access_denied_reason", "Cannot_get_the_information_due_to_internal_server_error");
+//        	
+//        }
+        
         return errorDetail;
     }
 	@ExceptionHandler(DetailsNotFoundException.class)
 	 public ResponseEntity<?> handleStudentNotFoundRxception(DetailsNotFoundException detailsNotFoundException)
-	 {            System.out.println(9);
+	 {          //  System.out.println(9);
 
 		DetailNotfound notfound=new DetailNotfound();
 		notfound.setMessage(detailsNotFoundException.getMessage());
@@ -98,6 +118,8 @@ public class GlobalExceptionalHandler {
 		notfound.setStatus(HttpStatus.CONFLICT);
 		return new ResponseEntity<>(notfound,HttpStatus.CONFLICT);
 	 }
+	
+	
 	
 	@ExceptionHandler(BadRequestException.class)
 	 public ResponseEntity<?> handleBadrequeste(BadRequestException alreadyExist)

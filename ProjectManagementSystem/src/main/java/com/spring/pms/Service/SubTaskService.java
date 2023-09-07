@@ -19,6 +19,7 @@ import com.spring.pms.Exceptions.DetailsNotFoundException;
 import com.spring.pms.Repository.SubtaskRepository;
 import com.spring.pms.Repository.TaskRepository;
 import com.spring.pms.Repository.UserRepo;
+import com.spring.pms.Response.ExceptionResponseMessage;
 
 @Service
 public class SubTaskService {
@@ -44,17 +45,20 @@ public class SubTaskService {
 		Task task=taskRepository.findById(id);
 		if(task==null)
 		{
-			throw new DetailsNotFoundException("Task_was_not_found");
+			throw new DetailsNotFoundException(ExceptionResponseMessage.TASK_DETAILS_NOT_FOUND.getMessage());
 
 		}
 		if(task.getStatus().equals("Completed"))
 		{
 			throw new BadRequestException("Cannot_create_sub_task_beacuse_task was_completed");
 		}
+		subtask.setTask(task);
 		task.getSubtask().add(subtask);
 		//taskRepository.save(task);
 		int userid=task.getUser().getId();
+		System.out.println(userid);
 		User user=userRepo.findById(userid);
+		subtask.setUsers(user);
 		user.getSubtasks().add(subtask);
 	//	userRepo.save(user);
 		subtaskRepository.save(subtask);

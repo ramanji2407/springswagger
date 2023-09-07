@@ -22,6 +22,7 @@ import com.spring.pms.Entity.User;
 import com.spring.pms.Exceptions.DetailsNotFoundException;
 import com.spring.pms.Repository.ProjectRepo;
 import com.spring.pms.Repository.UserRepo;
+import com.spring.pms.Response.ExceptionResponseMessage;
 
 @Service
 public class ProjectService {
@@ -61,7 +62,7 @@ public class ProjectService {
 		projectupdate.setDeadlineDate(project.getDeadlineDate());
 		projectupdate.setDescription(project.getDescription());
 		projectupdate.setName(project.getName());
-		projectupdate.setId(project.getId());
+		//projectupdate.setId(project.getId());
 		projectupdate.setStatus(project.getStatus());
 		projectupdate.setStartDate(project.getStartDate());
 		projectRepo.save(projectupdate);
@@ -78,7 +79,7 @@ public class ProjectService {
 		 Project project1=projectRepo.findById(id);
 			if(project1==null)
 			{
-				throw new DetailsNotFoundException("Projects_were_not_found_with_id");
+				throw new DetailsNotFoundException(ExceptionResponseMessage.PROJECT_DETAILS_NOT_FOUND.getMessage());
 			}
 
 		 
@@ -89,17 +90,42 @@ public class ProjectService {
 			 User users1 = userRepo.findById(i);
 			 if(users1==null)
 			 {
-					throw new DetailsNotFoundException("Users_were_not_found_with_id");
+					throw new DetailsNotFoundException(ExceptionResponseMessage.USER_DETAILS_NOT_FOUND.getMessage());
 
 			 }
+			 project.getUsers().add(users1);
+			 projectRepo.save(project);
 		 }
 		 
-	        List<User> users = userRepo.findAllById(projectDTO.getUserIds());
-	        
-	        users.forEach(e->e.getProjects().add(project));
-	        
-	        projectRepo.save(project);
-	        userRepo.saveAll(users);
+//	        List<User> users = userRepo.findAllById(projectDTO.getUserIds());
+//	        
+//	        users.forEach(e->e.getProjects().add(project));
+//	        
+//	        projectRepo.save(project);
+//	        userRepo.saveAll(users);
+//		 
+//		 
+//		 User users1 = userRepo.findById(id);
+//		 if(users1==null)
+//				{
+//					throw new DetailsNotFoundException("Projects_were_not_found_with_id");
+//				}
+//		 List<Integer> userIds = projectDTO.getUserIds();
+//		 for(int i:userIds)
+//		 {
+//             Project project = projectRepo.findById(i);
+//             if(project==null)
+//    			 {
+//    					throw new DetailsNotFoundException("Users_were_not_found_with_id");
+//    
+//    			 }
+//    		 users1.getProjects().add(project);
+//
+//			
+//		 }
+//		 userRepo.save(users1);
+//		 
+//	        
 	    }
 
 }

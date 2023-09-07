@@ -3,11 +3,14 @@ package com.spring.pms.Entity;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import springfox.documentation.annotations.ApiIgnore;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -23,14 +26,16 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import springfox.documentation.annotations.ApiIgnore;
+import lombok.Setter;
 
 @Entity
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Project {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,13 +60,22 @@ public class Project {
 	@Pattern(regexp = "^(Active|Inactive)$")
     @Schema(type = "string", allowableValues = { "Active", "Inactive" }, example = "Active")
 	private String status;
-	@JsonIgnore
-	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-	Set<User>user;
+	   
+
+	   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	    @JoinTable(name = "Project_User_TABLE",
+	            joinColumns = {
+	                    @JoinColumn(name = "Project_id", referencedColumnName = "id")
+	            },
+	            inverseJoinColumns = {
+	                    @JoinColumn(name = "User_id", referencedColumnName = "id")
+	            }
+	    )
+	 Set<User>users;
+	   
 	
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
-	@JoinColumn(name = "project_id")
-	private List<Task>tasks;
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "project")
+	 List<Task>tasks;
 	
 	
 	
