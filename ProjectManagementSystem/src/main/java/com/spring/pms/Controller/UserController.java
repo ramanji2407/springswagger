@@ -24,10 +24,12 @@ import com.spring.pms.Dto.AcessTokenResponseDto;
 import com.spring.pms.Dto.AcessTokenResponseDto.AcessTokenResponseDtoBuilder;
 import com.spring.pms.Dto.RefreshTokenRequest;
 import com.spring.pms.Dto.Request;
+import com.spring.pms.Dto.UserDto;
 import com.spring.pms.Entity.Project;
 import com.spring.pms.Entity.RefreshToken;
 import com.spring.pms.Entity.User;
 import com.spring.pms.Exceptions.DetailsNotFoundException;
+import com.spring.pms.Response.ExceptionResponseMessage;
 import com.spring.pms.Response.Response201;
 import com.spring.pms.Response.Response400;
 import com.spring.pms.Response.Response401;
@@ -54,7 +56,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 
 @RestController
-@RequestMapping("/User")
+@RequestMapping("/user")
 public class UserController {
 	@Autowired
 private	UserService userService;
@@ -87,15 +89,15 @@ private	UserService userService;
 	@SecurityRequirement(name="Bearer Authentication")
 
 	@GetMapping("/")
-	public ResponseEntity< ApiRespons<List<User>>> getAllUsers()
+	public ResponseEntity< ApiRespons<List<UserDto>>> getAllUsers()
 	{
-		List<User> list1=userService.getAllUsers();
+		List<UserDto> list1=userService.getAllUsers();
 		if(list1.isEmpty())
 		{
-			 throw new DetailsNotFoundException("No_Users_wre_not_found");
+			 throw new DetailsNotFoundException(ExceptionResponseMessage.USER_DETAILS_NOT_FOUND.getMessage());
 
 		}
-        ApiRespons<List<User>> response = new ApiRespons<>("Sucess", list1);
+        ApiRespons<List<UserDto>> response = new ApiRespons<>("Sucess", list1);
 
 		 return new ResponseEntity<>(response,HttpStatus.OK) ;
 			
@@ -119,14 +121,14 @@ private	UserService userService;
 
 
 	@GetMapping("/{id}")
-	public ResponseEntity< ApiRespons<User>> getAllUser(@PathVariable int id)
-	{User user=userService.getAllUser(id);
+	public ResponseEntity< ApiRespons<UserDto>> getAllUser(@PathVariable int id)
+	{UserDto user=userService.getAllUser(id);
 	if(user==null)
 	{
-		throw new DetailsNotFoundException("User_wre_not_found_with_id: "+id);
+		throw new DetailsNotFoundException(ExceptionResponseMessage.USER_DETAILS_NOT_FOUND.getMessage()+id);
 
 	}
-    ApiRespons<User> response = new ApiRespons<>("Sucess", user);
+    ApiRespons<UserDto> response = new ApiRespons<>("Sucess", user);
 
 	 return new ResponseEntity<>(response,HttpStatus.OK) ;
 	}
@@ -199,10 +201,10 @@ private	UserService userService;
 	@PutMapping("/{id}")
 	public ResponseEntity<ApiRespons<User>>  updateUser(@Valid @RequestBody User user ,  @PathVariable int id)
 	{
-		User user1=userService.getAllUser(id);
+		UserDto user1=userService.getAllUser(id);
 		if(user1==null)
 		{
-			throw new DetailsNotFoundException("Users_wre_not_found_with_id: "+id+"to_update");
+			throw new DetailsNotFoundException(ExceptionResponseMessage.USER_DETAILS_NOT_FOUND.getMessage()+id+"to_update");
 
 		}
 	    ApiRespons<User> response = new ApiRespons<>("Sucess", userService.updateUser(user, id));
@@ -213,7 +215,7 @@ private	UserService userService;
 	 	
 	@ApiResponses({
         @ApiResponse(responseCode = "201", content = {
-            @Content(schema = @Schema(implementation = Response201.class), mediaType = "application/json") },description = "Created"),
+            @Content(schema = @Schema(implementation = AcessTokenResponseDto.class), mediaType = "application/json") },description = "Created"),
         @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
        
 
@@ -239,6 +241,17 @@ private	UserService userService;
 	        }
 
 	}
+	@ApiResponses({
+        @ApiResponse(responseCode = "201", content = {
+            @Content(schema = @Schema(implementation = AcessTokenResponseDto.class), mediaType = "application/json") },description = "Created"),
+        @ApiResponse(responseCode = "404", content = { @Content(examples = {
+                @ExampleObject(name = "RefreshToken_NotFound",value = "{\"message\":\"Refresh_Token_Not_Found\"}"),
+                
+                
+              },schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "NotFound" ),              
+
+})
+	@Operation(summary = "Genearting Jwt token with the help refresh token ")
 	 @PostMapping("/refreshToken")
 	    public AcessTokenResponseDto refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
 		 

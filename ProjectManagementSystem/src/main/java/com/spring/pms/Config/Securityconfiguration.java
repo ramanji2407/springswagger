@@ -60,8 +60,8 @@ public class Securityconfiguration {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception
 	{
-	return http.csrf().disable().authorizeHttpRequests().requestMatchers("/User/token","/swagger-ui/**","/v3/api-docs/**","/User/","/Project/user","/User/refreshToken").permitAll()
-	.and().authorizeHttpRequests().requestMatchers("/User/**","/Project/**","/Task/**","/Subtask/**").authenticated().and()
+	return http.csrf().disable().authorizeHttpRequests().requestMatchers("/user/token","/swagger-ui/**","/v3/api-docs/**","/user/","/project/user","/user/refreshToken").permitAll()
+	.and().authorizeHttpRequests().requestMatchers("/user/**","/project/**","/task/**","/subtask/**").authenticated().and()
 	 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
     .authenticationProvider(authenticationProvider()).addFilterBefore(authfilter(), UsernamePasswordAuthenticationFilter.class).build();
 	}

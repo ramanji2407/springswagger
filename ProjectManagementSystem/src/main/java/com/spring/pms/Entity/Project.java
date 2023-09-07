@@ -35,7 +35,6 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 
 public class Project {
 	@Id
@@ -72,12 +71,11 @@ public class Project {
 	                    @JoinColumn(name = "User_id", referencedColumnName = "id")
 	            }
 	    )
-	  // @Fetch(FetchMode.JOIN)
 	 Set<User>users;
 	   
 	
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "project")
-	@JsonBackReference List<Task>tasks;
+	 List<Task>tasks;
 	
 	
 	

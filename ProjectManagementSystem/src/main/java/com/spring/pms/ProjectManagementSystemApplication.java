@@ -1,7 +1,9 @@
 package com.spring.pms;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
+//mvn jasypt:encrypt-value -Djasypt.encryptor.password=javatechie -Djasypt.plugin.value=Password
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -18,6 +20,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 		  bearerFormat = "JWT",
 		  scheme = "bearer"
 		)
+@EnableEncryptableProperties
 public class ProjectManagementSystemApplication {
 
 	public static void main(String[] args) {

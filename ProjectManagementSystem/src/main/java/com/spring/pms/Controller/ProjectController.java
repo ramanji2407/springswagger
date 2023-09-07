@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.spring.pms.Dto.Projectdto;
 import com.spring.pms.Entity.Project;
 import com.spring.pms.Exceptions.DetailsNotFoundException;
+import com.spring.pms.Response.ExceptionResponseMessage;
 import com.spring.pms.Response.Projectapiresponse;
 import com.spring.pms.Response.Response201;
 import com.spring.pms.Response.Response400;
@@ -39,7 +40,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/Project")
+@RequestMapping("/project")
 @SecurityRequirement(name="Bearer Authentication")
 public class ProjectController {
 	
@@ -58,7 +59,8 @@ public class ProjectController {
 	           @ExampleObject(name = "JWT_Token_expired !",value = "{\"message\":\"JWT_Token_already_expired_!\"}"),
 	           
 	         },schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
-	   @ApiResponse(responseCode = "204", content = { @Content(schema = @Schema(),mediaType = "application/json")},description = "No Content" )
+	   @ApiResponse(responseCode = "204", content = { @Content(schema = @Schema(),mediaType = "application/json")},description = "No Content" ),
+
 	})
 
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
@@ -68,7 +70,7 @@ public class ProjectController {
 		 List<Project> list1=projectService.getAllProjects();
 		 if(list1.isEmpty())
 		 {
-			 throw new DetailsNotFoundException("Projects_wre_not_found");
+			 throw new DetailsNotFoundException(ExceptionResponseMessage.PROJECT_DETAILS_NOT_FOUND.getMessage());
 		 }
 	        ApiRespons<List<Project>> response = new ApiRespons<>("Sucess", list1);
 
@@ -96,7 +98,7 @@ public class ProjectController {
 		Project project=projectService.getAllProject(id);
 		if(project==null)
 		{
-			throw new DetailsNotFoundException("Projects_wre_not_found_with_id: "+id);
+			 throw new DetailsNotFoundException(ExceptionResponseMessage.PROJECT_DETAILS_NOT_FOUND.getMessage());
 		}
         ApiRespons<Project> response = new ApiRespons<>("Sucess", project);
 
@@ -173,7 +175,7 @@ public class ProjectController {
 		Project project1=projectService.getAllProject(id);
 		if(project1==null)
 		{
-			throw new DetailsNotFoundException("Projects_were_not_found_with_id: "+id+"to_update");
+			throw new DetailsNotFoundException(ExceptionResponseMessage.PROJECT_DETAILS_NOT_FOUND.getMessage()+id+"to_update");
 		}
         ApiRespons<Project> response = new ApiRespons<>("Sucess", projectService.updateProject(project, id));
 
@@ -215,14 +217,14 @@ public	ResponseEntity<ApiRespons<String>>assigningUserToProject( @Valid @Request
 
 
 	}
-	@PreAuthorize("hasRole('ROLE_MANAGER')")
-
-    @GetMapping("/user")
-    public ResponseEntity<ApiRespons<String>> getLoginUsername(Principal principal)
-    {
-		  ApiRespons<String> response = new ApiRespons<>("Sucess", "username is "+principal.getName());
-
-			return new ResponseEntity<>(response,HttpStatus.OK);    }
-  
+//	@PreAuthorize("hasRole('ROLE_MANAGER')")
+//
+//    @GetMapping("/user")
+//    public ResponseEntity<ApiRespons<String>> getLoginUsername(Principal principal)
+//    {
+//		  ApiRespons<String> response = new ApiRespons<>("Sucess", "username is "+principal.getName());
+//
+//			return new ResponseEntity<>(response,HttpStatus.OK);    }
+//  
 
 }

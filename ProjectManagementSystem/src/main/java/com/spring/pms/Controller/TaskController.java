@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.pms.Entity.Task;
 import com.spring.pms.Exceptions.DetailsNotFoundException;
+import com.spring.pms.Response.ExceptionResponseMessage;
 import com.spring.pms.Response.Response200;
 import com.spring.pms.Response.Response201;
 import com.spring.pms.Response.Response400;
@@ -38,7 +39,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
-@RequestMapping("/Task")
+@RequestMapping("/task")
 @RestController
 @SecurityRequirement(name="Bearer Authentication")
 
@@ -67,7 +68,7 @@ public class TaskController {
 	{
 		if(taskService.getAllTasks().isEmpty())
 		{
-			 throw new DetailsNotFoundException("Tasks_wre_not_found");
+			 throw new DetailsNotFoundException(ExceptionResponseMessage.TASK_DETAILS_NOT_FOUND.getMessage());
 
 		}
 		ApiRespons<List<Task>> response = new ApiRespons<>("Sucess", taskService.getAllTasks());
@@ -99,7 +100,7 @@ public class TaskController {
 	{
 		if(taskService.getAllTask(id)==null)
 		{
-			 throw new DetailsNotFoundException("Tasks_wre_not_found_with_that_id");
+			 throw new DetailsNotFoundException(ExceptionResponseMessage.TASK_DETAILS_NOT_FOUND.getMessage()+id);
 
 		}
 		ApiRespons<Task> response = new ApiRespons<>("Sucess",taskService.getAllTask(id));
@@ -142,7 +143,7 @@ public class TaskController {
 		@PreAuthorize("hasRole('ROLE_MANAGER')")
 		@Operation(summary = "Posting the task with userid and projectid")
 
-	@PostMapping("/{id}/{pid}")
+	@PostMapping("/user/{id}/project/{pid}")
 	public ResponseEntity<ApiRespons<String>> postTask(@Valid @RequestBody Task task, @PathVariable int id,@PathVariable int pid)
 	{
 		
@@ -187,7 +188,7 @@ public class TaskController {
 	{
 		if(taskService.getAllTask(id)==null)
 		{
-			 throw new DetailsNotFoundException("Tasks_wre_not_found_with_that_id_to_update");
+			 throw new DetailsNotFoundException(ExceptionResponseMessage.TASK_DETAILS_NOT_FOUND.getMessage()+"_to_update");
 
 		}
         ApiRespons<Task> response = new ApiRespons<>("Sucess",taskService.updateTask(task, id));
@@ -218,7 +219,7 @@ public class TaskController {
 	{
 		if(taskService.getAllTask(id)==null)
 		{
-			 throw new DetailsNotFoundException("Tasks_wre_not_found_with_that_id_to_delete");
+			 throw new DetailsNotFoundException(ExceptionResponseMessage.TASK_DETAILS_NOT_FOUND.getMessage()+"_to_delete");
 
 		}
 		taskService.deleteTask(id);
